@@ -1,0 +1,23 @@
+CREATE TABLE IF NOT EXISTS vehicles (
+  id BIGSERIAL PRIMARY KEY,
+  type VARCHAR(10) NOT NULL CHECK (type IN ('CAR','SUV')),
+  brand VARCHAR(100) NOT NULL,
+  model VARCHAR(100) NOT NULL,
+  price_per_day NUMERIC(10,2) NOT NULL CHECK (price_per_day > 0),
+  seats INT NULL,
+  awd BOOLEAN NULL
+);
+
+CREATE TABLE IF NOT EXISTS customers (
+  id BIGSERIAL PRIMARY KEY,
+  full_name VARCHAR(120) NOT NULL,
+  phone VARCHAR(40)
+);
+
+CREATE TABLE IF NOT EXISTS rentals (
+  id BIGSERIAL PRIMARY KEY,
+  vehicle_id BIGINT NOT NULL REFERENCES vehicles(id) ON DELETE RESTRICT,
+  customer_id BIGINT NOT NULL REFERENCES customers(id) ON DELETE RESTRICT,
+  days INT NOT NULL CHECK (days > 0),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('ACTIVE','COMPLETED','CANCELED'))
+);
