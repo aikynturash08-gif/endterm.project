@@ -7,7 +7,7 @@ import com.aikyn.api.model.vehicle.Vehicle;
 import com.aikyn.api.patterns.VehicleFactory;
 import com.aikyn.api.repository.VehicleRepository;
 import org.springframework.stereotype.Service;
-
+import com.aikyn.api.cache.VehicleCache;
 import java.util.List;
 
 @Service
@@ -19,35 +19,64 @@ public class VehicleService {
   }
 
   public List<Vehicle> getAll() {
-    return repo.findAll();
+
+    VehicleCache cache = VehicleCache.getInstance();
+
+    if (!cache.isEmpty()) {
+      return cache.get();
+    }
+
+    List<Vehicle> vehicles = repo.findAll();
+    cache.put(vehicles);
+
+    return vehicles;
   }
+
 
   public Vehicle getById(int id) {
     return repo.findById(id).orElseThrow(() -> new NotFoundException("Vehicle not found: " + id));
   }
 
   public int create(CreateVehicleRequest req) {
-    try {
-      Vehicle v = VehicleFactory.create(req.getType(), req.getBrand(), req.getModel(), req.getPricePerDay());
-      return repo.create(v);
-    } catch (IllegalArgumentException e) {
-      throw new BadRequestException(e.getMessage());
-    }
+
+    Vehicle v = VehicleFactory.create(
+            req.getType(),
+            req.getBrand(),
+            req.getModel(),
+            req.getPricePerDay()
+    );
+
+    int id = repo.create(v);
+
+    VehicleCache.getInstance().clear();
+
+    return id;
   }
+
 
   public void update(int id, CreateVehicleRequest req) {
-    Vehicle current = getById(id); // ensures exists
-    Vehicle updated;
-    try {
-      updated = VehicleFactory.create(current.getType(), req.getBrand(), req.getModel(), req.getPricePerDay());
-    } catch (IllegalArgumentException e) {
-      throw new BadRequestException(e.getMessage());
-    }
+
+    Vehicle current = getById(id);
+
+    Vehicle updated = VehicleFactory.create(
+            current.getType(),
+            req.getBrand(),
+            req.getModel(),
+            req.getPricePerDay()
+    );
+
     repo.update(id, updated);
+
+    VehicleCache.getInstance().clear();
   }
 
+
   public void delete(int id) {
+
     getById(id);
     repo.delete(id);
+
+    VehicleCache.getInstance().clear();
   }
 }
+
