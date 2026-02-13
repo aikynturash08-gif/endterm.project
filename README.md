@@ -69,3 +69,8 @@ Sample `POST /api/rentals` body:
 
 ## Global error handling
 `GlobalExceptionHandler` returns JSON errors with status codes.
+
+<img width="960" height="1020" alt="Screenshot 2026-02-08 201246" src="https://github.com/user-attachments/assets/b3bcdc17-5f0b-48ae-bd54-89cf0f7f51a8" />
+<img width="960" height="1020" alt="Screenshot 2026-02-08 201324" src="https://github.com/user-attachments/assets/3e49c73b-ce09-494d-af63-8e4d4e50359b" />
+<img width="960" height="1020" alt="Screenshot 2026-02-08 201402" src="https://github.com/user-attachments/assets/8ab6bfd9-d983-45c7-b8df-5bbce6ac9a3d" />
+<img width="960" height="1020" alt="Screenshot 2026-02-08 201436" src="https://github.com/user-attachments/assets/ee7b644b-bfe5-49ba-8eec-e4a326a0443d" />
